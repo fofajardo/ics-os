@@ -43,6 +43,7 @@
 #*.dylib
 obj-*/
 vmdex
+ics-os-floppy.img
 
 # Executables
 #*.exe
