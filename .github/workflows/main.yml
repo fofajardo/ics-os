@@ -1,8 +1,10 @@
-name: ICS-OS Master CI
+name: ICS-OS CI
 
 on:
+  workflow_dispatch:
+    branches: [ "development", "master" ]
   push:
-    branches: [ "master" ]
+    branches: [ "development", "master" ]
   pull_request:
     branches: [ "master" ]
 
