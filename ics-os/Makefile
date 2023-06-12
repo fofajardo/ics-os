@@ -3,6 +3,10 @@
 # written by Joseph Anthony C. Hermocilla
 #
 
+SND_BACKEND = pa
+SND_DEVID = snd0
+IMG_FDA = ics-os-floppy.img
+
 vmdex:
 	make -C kernel/
 
@@ -16,10 +20,10 @@ clean:
 update_kernel_only: vmdex
 	sudo rm -fr mnt
 	sudo mkdir mnt
-	sudo mount ics-os-floppy.img mnt -tmsdos -oloop
+	sudo mount $(IMG_FDA) mnt -tmsdos -oloop
 	sudo cp -r vmdex mnt
 	sudo umount mnt
-	sudo chmod 666 ics-os-floppy.img
+	sudo chmod 666 $(IMG_FDA)
 
 prep_image: vmdex
 	rm -fr tmp
@@ -35,13 +39,13 @@ prep_image: vmdex
 	cp lib/* tmp/lib1/
 
 floppy: prep_image
-	cp grub.img ics-os-floppy.img                #copy an image with grub
+	cp grub.img $(IMG_FDA)                #copy an image with grub
 	sudo rm -fr mnt
 	sudo mkdir mnt
-	sudo mount ics-os-floppy.img mnt -tmsdos -oloop
+	sudo mount $(IMG_FDA) mnt -tmsdos -oloop
 	sudo cp -r tmp/* mnt/
 	sudo umount mnt
-	sudo chmod 666 ics-os-floppy.img
+	sudo chmod 666 $(IMG_FDA)
 	rm -fr tmp/
 
 livecd: prep_image
@@ -51,16 +55,25 @@ livecd: prep_image
 	rm -fr tmp/
 
 boot-floppy:
-	qemu-system-i386 -net nic,model=rtl8139 -soundhw pcspk -fda ics-os-floppy.img -boot a -m 64M 
+	qemu-system-i386 -net nic,model=rtl8139 \
+			-audiodev $(SND_BACKEND),id=$(SND_DEVID) \
+			-machine pcspk-audiodev=$(SND_DEVID) \
+			-fda $(IMG_FDA) -boot a -m 64M
 
 boot-floppy-gdb:
-	qemu-system-i386 -net nic,model=rtl8139 -soundhw pcspk -fda ics-os-floppy.img -boot a -m 64M -s -S
+	qemu-system-i386 -net nic,model=rtl8139 \
+			-audiodev $(SND_BACKEND),id=$(SND_DEVID) \
+			-machine pcspk-audiodev=$(SND_DEVID) \
+			-fda $(IMG_FDA) -boot a -m 64M -s -S
 
 boot-floppy-vnc:
-	qemu-system-i386 -net nic,model=rtl8139 -soundhw pcspk -fda ics-os-floppy.img -boot a -m 64M -vnc :1 
+	qemu-system-i386 -net nic,model=rtl8139 \
+			-audiodev $(SND_BACKEND),id=$(SND_DEVID) \
+			-machine pcspk-audiodev=$(SND_DEVID) \
+			-fda $(IMG_FDA) -boot a -m 64M -vnc :1
 
 boot-debug:
-	cd kernel ;	qemu-system-i386 -s -S -kernel Kernel32.bin -fda ../ics-os-floppy.img -m 64M -append "root (hdp0p0)" 
+	cd kernel ;	qemu-system-i386 -s -S -kernel Kernel32.bin -fda ../$(IMG_FDA) -m 64M -append "root (hdp0p0)"
 
 
 boot-livecd:
