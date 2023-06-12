@@ -318,7 +318,7 @@ pcibios_call:
    add eax,edx
    jmp pci_done
 
-   pci_error
+   pci_error:
    mov eax,-1
 
    pci_done:
