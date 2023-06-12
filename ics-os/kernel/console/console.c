@@ -911,7 +911,9 @@ int console_execute(const char *str){
 
    }else{         //ok it is not a command, maybe it's an executable?
       if (u!=0){
-         char path[256]="", tmp[256];
+         char path[256];
+         strcpy(path, "");
+         char tmp[256];
          env_getenv("PATH",path);     
          if (strcmp(path,"")==0){
             strcpy(path,"/icsos/apps");
@@ -939,14 +941,19 @@ int console_new(){
 };
 
 void console_main(){
-   DEX32_DDL_INFO *myddl=0;
-   fg_processinfo *myfg;
-   char s[256]="";
-   char temp[256]="";
-   char last[256]="";
-   char console_fmt[256]="%cdir% %% ";
-   char console_prompt[256]="cmd >";
-    
+   DEX32_DDL_INFO *myddl = 0;
+   fg_processinfo *myfg = 0;
+   char s[256];
+   strcpy(s, "");
+   char temp[256];
+   strcpy(temp, "");
+   char last[256];
+   strcpy(last, "");
+   char console_fmt[256];
+   strcpy(console_fmt, "%cdir% %% ");
+   char console_prompt[256];
+   strcpy(console_prompt, "cmd >");
+
    DWORD ptr;
     
    myddl =Dex32CreateDDL();    
@@ -959,9 +966,9 @@ void console_main(){
    clrscr();
    strcpy(last,"");
     
-   if (console_first == 0) 
+   if (console_first == 0)
       script_load("/icsos/autoexec.bat");
-    
+
    console_first++;  
    do{
       textcolor(WHITE);
