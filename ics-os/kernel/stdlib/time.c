@@ -2,6 +2,7 @@ DWORD time_count = 0,  //used to store the number of seconds since dex was boote
 aux_time2=0;   //since the OS has the timer set to interrupt 200 times a second
                //an auxillary counter is required so that it increments time_count
                //if it reaches 200
+dex32_datetime time_systime;
                
 int time_monthdays[12]= {0,31,59,90,120,151,181,212,243,273,304,334,365}; 
 
