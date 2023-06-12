@@ -58,23 +58,31 @@ boot-floppy:
 	qemu-system-i386 -net nic,model=rtl8139 \
 			-audiodev $(SND_BACKEND),id=$(SND_DEVID) \
 			-machine pcspk-audiodev=$(SND_DEVID) \
-			-fda $(IMG_FDA) -boot a -m 64M
+			-drive format=raw,file=$(IMG_FDA),index=0,if=floppy \
+			-boot a -m 64M
 
 boot-floppy-gdb:
 	qemu-system-i386 -net nic,model=rtl8139 \
 			-audiodev $(SND_BACKEND),id=$(SND_DEVID) \
 			-machine pcspk-audiodev=$(SND_DEVID) \
-			-fda $(IMG_FDA) -boot a -m 64M -s -S
+			-drive format=raw,file=$(IMG_FDA),index=0,if=floppy \
+			-boot a -m 64M -s -S
 
 boot-floppy-vnc:
 	qemu-system-i386 -net nic,model=rtl8139 \
 			-audiodev $(SND_BACKEND),id=$(SND_DEVID) \
 			-machine pcspk-audiodev=$(SND_DEVID) \
-			-fda $(IMG_FDA) -boot a -m 64M -vnc :1
+			-drive format=raw,file=$(IMG_FDA),index=0,if=floppy \
+			-boot a -m 64M -vnc :1
 
 boot-debug:
-	cd kernel ;	qemu-system-i386 -s -S -kernel Kernel32.bin -fda ../$(IMG_FDA) -m 64M -append "root (hdp0p0)"
-
+	qemu-system-i386 -s -S -kernel "kernel/obj-i386/kernel32.bin" \
+			-drive format=raw,file=$(IMG_FDA),index=0,if=floppy \
+			-m 64M -append "root (hdp0p0)"
 
 boot-livecd:
 	qemu-system-i386 -cdrom ics-os-livecd.iso -boot cd -m 64M
+
+all: clean floppy
+
+run: boot-floppy
