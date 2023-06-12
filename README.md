@@ -11,49 +11,46 @@ Thus, this project aims to develop a simple yet operational instructional operat
 Latest floppy image: [![CI badge](https://github.com/fofajardo/ics-os/actions/workflows/main.yml/badge.svg)](https://nightly.link/?url=https://github.com/fofajardo/ics-os/blob/master/.github/workflows/main.yml)
 
 Test the floppy image in qemu.
+```console
+$ qemu-system-i386 -fda ics-os-floppy.img
 ```
-$qemu-system-i386 -fda ics-os-floppy.img
+
+## Prerequisites
+
+### Ubuntu 22.04 and above
+```console
+$ sudo apt-get update
+$ sudo apt-get install -y build-essential nasm qemu-kvm tcc git gcc-multilib
 ```
 
-## Build Environment
-
-Ubuntu 16.04 64-bit is the last tested working build environment. Virtualbox can be used 
-to run this version of Ubuntu.  However, docker is the recommended build environment since new versions 
-of Ubuntu do not work anymore.
-
-### Using Docker to build
-
-ICS-OS is a 32-bit operating system and requires a 32-bit build environment. You need to install 
-[docker](https://docs.docker.com/engine/install/ubuntu/) and [docker-compose](https://docs.docker.com/compose/install/) 
-to build the ICS-OS kernel and user applications.
-
-Run the following command to enter the build environment:
-
-`$docker-compose run ics-os-build`
-
-You will be dropped to a shell where you can perform the build. The ics-os folder is mapped inside the container. Thus, 
-you can perform the edits outside the container(in another terminal) and the changes will be reflected inside the build environment.
-
+### Arch Linux
+```console
+$ sudo pacman -Syu base-devel nasm qemu-full git
 ```
-#cd /home/ics-os
-#make clean
-#make
-#exit
+
+### Windows (WSL)
+1. Install [WSL](https://learn.microsoft.com/en-us/windows/wsl/install).
+2. Open a Linux/Ubuntu shell and run:
+```console
+$ sudo apt-get update
+$ sudo apt-get install -y build-essential nasm qemu-kvm tcc git gcc-multilib
 ```
+
+### Docker
+See [Lab 01](https://github.com/srg-ics-uplb/ics-os/blob/master/labs/lab01/ICSOS_Lab01.pdf) for a more complete discussion of how 
+to set up the build environment.
+
+## Build instructions
 Make the floppy image then boot.
-
-```
-$sudo make floppy
-$make boot-floppy
+```console
+$ sudo make all
+$ make run
 ```
 
 Alternatively, you can boot the floppy image directly using qemu.
+```console
+$ qemu-system-i386 -fda ics-os-floppy.img
 ```
-$qemu-system-i386 -fda ics-os-floppy.img
-```
-
-See [Lab 01](https://github.com/srg-ics-uplb/ics-os/blob/master/labs/lab01/ICSOS_Lab01.pdf) for a more complete discussion of how 
-to set up the build environment.
 
 ## Development and Support
 This project is used at the <a href='http://www.ics.uplb.edu.ph'>Institute of Computer Science</a>, <a href='http://www.uplb.edu.ph'>University of the Philippines Los Banos</a> for <a href='http://ics.uplb.edu.ph/courses/ugrad/cmsc/125'>CMSC 125</a>. It is maintained by the <a href='https://sites.google.com/up.edu.ph/systems-research'>Systems Research Group</a>.
