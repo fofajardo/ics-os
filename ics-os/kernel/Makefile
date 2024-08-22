@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-fno-stack-protector -fgnu89-inline -m32 -w -nostdlib -fno-builtin -ffreestanding -c -g
+CFLAGS=-fno-stack-protector -fgnu89-inline -m32 -w -nostdlib -fno-builtin -ffreestanding -c -g -Wno-incompatible-pointer-types -Wno-implicit-function-declaration -Wno-int-conversion -Wno-return-mismatch -Wno-implicit-int
 ASM=nasm
 ASMFLAGS=-f elf32
 OBJDIR=obj-i386
