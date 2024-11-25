@@ -17,6 +17,30 @@ $ qemu-system-i386 -fda ics-os-floppy.img
 
 ## Prerequisites
 
+### Docker
+
+ICS-OS is a 32-bit operating system and requires a 32-bit build environment. You need to install
+[docker](https://docs.docker.com/engine/install/ubuntu/) and [docker-compose](https://docs.docker.com/compose/install/)
+to build the ICS-OS kernel and user applications.
+
+Run the following command to enter the build environment:
+
+`$docker-compose run ics-os-build`
+
+or if you are using the docker-compose plugin:
+
+`$docker compose run ics-os-build`
+
+You will be dropped to a shell where you can perform the build. The ics-os folder is mapped inside the container. Thus,
+you can perform the edits outside the container(in another terminal) and the changes will be reflected inside the build environment.
+
+Alternatively, you can boot the floppy image directly using qemu.
+```console
+$ qemu-system-i386 -fda ics-os-floppy.img
+```
+
+See [Lab 01](https://github.com/srg-ics-uplb/ics-os/blob/master/labs/lab01/ICSOS_Lab01.pdf) for a more complete discussion of how to set up the build environment.
+
 ### Ubuntu 22.04 and above
 ```console
 $ sudo apt-get update
@@ -36,20 +60,11 @@ $ sudo apt-get update
 $ sudo apt-get install -y build-essential nasm qemu-kvm tcc git gcc-multilib
 ```
 
-### Docker
-See [Lab 01](https://github.com/srg-ics-uplb/ics-os/blob/master/labs/lab01/ICSOS_Lab01.pdf) for a more complete discussion of how 
-to set up the build environment.
-
 ## Build instructions
 Make the floppy image then boot.
 ```console
 $ sudo make all
 $ make run
-```
-
-Alternatively, you can boot the floppy image directly using qemu.
-```console
-$ qemu-system-i386 -fda ics-os-floppy.img
 ```
 
 ## Development and Support
