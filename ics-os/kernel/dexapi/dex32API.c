@@ -1,7 +1,7 @@
 /*******************************************************************
 DEX32 API (Application Programmers Interface)
 This is the code that manages system calls from user mode programs (Level 3)
-currently applications make sys calls using interrupt 0x30h (User Interrupt Gate) 
+currently applications make sys calls using interrupt 0x30h (User Interrupt Gate)
 although a user procedure call is in the works
 
     DEX educational extensible operating system 1.0 Beta
@@ -19,21 +19,28 @@ although a user procedure call is in the works
 
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
-    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. 
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 ********************************************************************/
 
 #include "dex32API.h"
+
+int kchown(int fd, int uid, int gid){
+   printf("Changing owner of fd=%d to user id=%d and group id=%d\n", fd, uid, gid);
+   //Actual code to change file ownership is placed here.
+   //For now this is just empty
+   return 0; //0-success
+}
 
 int dex32_getversion(){
    return DEX32_OSVER;
 };
 
-int api_addsystemcall(DWORD function_number, void *function_ptr, 
+int api_addsystemcall(DWORD function_number, void *function_ptr,
                         DWORD access_check, DWORD flags){
 
    if (function_number < API_MAXSYSCALLS){  //check if function number is less than allowed number of syscalls
       if (api_syscalltable[function_number].function_ptr == 0){  //check if the number is unused
-         api_syscalltable[function_number].access_check = access_check;     
+         api_syscalltable[function_number].access_check = access_check;
          api_syscalltable[function_number].function_ptr = function_ptr;
          api_syscalltable[function_number].flags = flags;
          return function_number;
@@ -46,7 +53,7 @@ int api_addsystemcall(DWORD function_number, void *function_ptr,
 int api_removesystemcall(DWORD function_number){
    if (function_number < API_MAXSYSCALLS){
       if (api_syscalltable[function_number].function_ptr!=0){
-         api_syscalltable[function_number].access_check = 0;     
+         api_syscalltable[function_number].access_check = 0;
          api_syscalltable[function_number].function_ptr = 0;
          api_syscalltable[function_number].flags = 0;
          return function_number;
@@ -59,12 +66,12 @@ int api_removesystemcall(DWORD function_number){
 void api_init(){
    int i;
 
-/******************************Initialize the API****************************/ 
+/******************************Initialize the API****************************/
    for (i=0; i<API_MAXSYSCALLS ;i++){
-      api_syscalltable[i].access_check = 0;     
+      api_syscalltable[i].access_check = 0;
       api_syscalltable[i].function_ptr = 0;
    };
-     
+
 /************* Add the functions that could be used by user applications*******/
    api_addsystemcall(0, dex32_getversion,0,0);
    api_addsystemcall(1, kb_dequeue,0,0);
@@ -95,7 +102,7 @@ void api_init(){
    api_addsystemcall(0x1a,getparentid,0,0);
    api_addsystemcall(0x1b,findprocessname,0,0);
    api_addsystemcall(0x1c,loadDLL,0,0);
-     
+
    api_addsystemcall(30,module_getfxn,0,0);
    api_addsystemcall(31,ps_seterror,0,0);
    api_addsystemcall(32,ps_geterror,0,0);
@@ -177,6 +184,7 @@ void api_init(){
    api_addsystemcall(0x9E,write_char,0,0);
    api_addsystemcall(0x9F,env_getenv,0,0);
    api_addsystemcall(0xA0,env_setenv,0,0);
+   api_addsystemcall(0xC2,kchown, 0, 0);
 };
 
 
@@ -192,23 +200,23 @@ DWORD api_syscall(DWORD fxn,DWORD val,DWORD val2,
       current_process->cursyscall[0]=current_process->cursyscall[1];
       current_process->cursyscall[1]=fxn;
    };
-  
+
    //place a marker to indicate if a systemcall has successfully completed
    current_process->op_success=0;
-  
-   if (fxn >= API_MAXSYSCALLS) 
+
+   if (fxn >= API_MAXSYSCALLS)
       retval = -1;
-   else{ 
+   else{
       if (api_syscalltable[fxn].function_ptr != 0){
          //access systemcall table and validate system call
          syscall_function = api_syscalltable[fxn].function_ptr;
-           
+
          //This system calls require interrupts to be enabled
          if (api_syscalltable[fxn].flags&API_REQUIRE_INTS){
             DWORD flags;
             storeflags(&flags);
             startints();
-         
+
             //make the systemcall
             retval = syscall_function(val, val2, val3, val4, val5);
 
@@ -220,9 +228,9 @@ DWORD api_syscall(DWORD fxn,DWORD val,DWORD val2,
          printf("dex32_api: An unknown systemcall(0x%X) was called\n",fxn);
          retval = -1;
       };
-    
+
       current_process->op_success=1;
    }
-   return retval;        
-};      
+   return retval;
+};
 
