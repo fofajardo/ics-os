@@ -1093,8 +1093,8 @@ DWORD fat_createfile(vfs_node *f,BPB *bpbblock,int id)
          
          getdatetime(&d);
          
-         f->date_created=d;
-         f->date_modified=d;
+         copydatetime(&d, &f->date_created);
+         copydatetime(&d, &f->date_modified);
          
          dosdate.year=(d.year-1980)&0x7f;
          dosdate.date=d.day;
