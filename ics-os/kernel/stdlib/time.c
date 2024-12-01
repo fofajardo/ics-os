@@ -48,6 +48,9 @@ char *datetostr(dex32_datetime *d,char *str)
 
 void getdatetime(dex32_datetime *d) //gets the date nd time
   {
+     d->ms = 0;
+     d->adj = 0;
+
      DWORD x;
 
      //seconds
