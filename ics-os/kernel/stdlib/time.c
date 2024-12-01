@@ -229,3 +229,14 @@ void time_init()
     //update system time
     getdatetime(&time_systime);
 };
+
+void copydatetime(dex32_datetime *src, dex32_datetime *dest) {
+  dest->month = src->month;
+  dest->year = src->year;
+  dest->day = src->day;
+  dest->hour = src->hour;
+  dest->min = src->min;
+  dest->sec = src->sec;
+  dest->ms = src->ms;
+  dest->adj = src->adj;
+}

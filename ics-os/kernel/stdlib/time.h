@@ -23,6 +23,7 @@ extern dex32_datetime time_systime;
 
 char *datetostr(dex32_datetime *d,char *str);
 void getdatetime(dex32_datetime*); //gets the date nd time
+void copydatetime(dex32_datetime *src, dex32_datetime *dest);
 void dex32_set_timer(DWORD rate);
 int time();
 
