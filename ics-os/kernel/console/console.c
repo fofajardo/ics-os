@@ -867,8 +867,8 @@ int console_execute(const char *str){
       demo_graphics();
    }else
    if (strcmp(u,"cc") == 0){   //-- Builds a C program (invokes tcc.exe). Args: <name.exe> <name.c>
-      char src[30],exe[30],cmdline[256],path[256];
-      char sdk_home[128]="";
+      char src[30],exe[30],cmdline[256],path[256],sdk_home[128];
+      strcpy(sdk_home, "");
       env_getenv("SDK_HOME",sdk_home);
       env_getenv("PATH",path);
       if ( (strcmp(sdk_home,"")==0) || strcmp(path,"")==0 ){
