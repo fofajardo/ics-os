@@ -405,14 +405,18 @@ void * memset (
         unsigned int count
         )
 {
-        void *start = dst;
+  if (dst == NULL) {
+      return NULL;
+  }
 
-        while (count--) {
-                *(char *)dst = (char)val;
-                dst = (char *)dst + 1;
-        }
+  unsigned char *ptr = (unsigned char *)dst;
+  unsigned char value = (unsigned char)val;
 
-        return(start);
+  while (count--) {
+      *ptr++ = value;
+  }
+
+  return dst;
 };
 
 char tolower(char c)
